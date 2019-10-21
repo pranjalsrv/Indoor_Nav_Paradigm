@@ -1,7 +1,9 @@
 import pyrebase
 from compute import computing
 import json
+import traceback
 
+# production_config = json.load(open('production_firebase_config.json', 'r'))
 testing_config = json.load(open('testing_firebase_config.json', 'r'))
 config = {
     "apiKey": testing_config['apiKey'],
@@ -9,14 +11,6 @@ config = {
     "databaseURL": testing_config['databaseURL'],
     "storageBucket": testing_config['storageBucket']
 }
-
-
-# config = {
-#     "apiKey": "AIzaSyA0mYpn-QMrga5sbR44rrZH4wR7Ym3Xiow",
-#     "authDomain": "limes-app.firebaseapp.com",
-#     "databaseURL": "https://limes-app.firebaseio.com",
-#     "storageBucket": "limes-app.appspot.com"
-# }
 
 firebase = pyrebase.initialize_app(config)
 
@@ -29,15 +23,13 @@ def stream_handler(message):
         id = message['path']
         allData = message["data"]
         # allData = dict(message["data"].values()[0])
-
         doors = allData['doors']
         rooms = allData['rooms']
         walls = allData['walls']
-        print(walls)
-        print(id)
-        computing(doors, rooms, walls, id)
-    except:
-        print('At Exception')
+        connections = allData['connections']
+        computing(doors, rooms, walls, connections, id)
+    except Exception:
+        print('At Exception ', traceback.print_exc())
         pass
 
 
