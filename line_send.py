@@ -1,6 +1,7 @@
 import pyrebase
 import json
 
+# production_config = json.load(open('production_firebase_config.json', 'r'))
 testing_config = json.load(open('testing_firebase_config.json', 'r'))
 config = {
     "apiKey": testing_config['apiKey'],
@@ -9,14 +10,6 @@ config = {
     "storageBucket": testing_config['storageBucket']
 
 }
-
-# config = {
-#     "apiKey": "AIzaSyA0mYpn-QMrga5sbR44rrZH4wR7Ym3Xiow",
-#     "authDomain": "limes-app.firebaseapp.com",
-#     "databaseURL": "https://limes-app.firebaseio.com",
-#     "storageBucket": "limes-app.appspot.com"
-# }
-
 firebase = pyrebase.initialize_app(config)
 
 db = firebase.database()
