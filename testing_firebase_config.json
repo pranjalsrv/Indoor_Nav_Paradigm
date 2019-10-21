@@ -1,0 +1,6 @@
+{
+    "apiKey": "AIzaSyA0mYpn-QMrga5sbR44rrZH4wR7Ym3Xiow",
+    "authDomain": "limes-app.firebaseapp.com",
+    "databaseURL": "https://limes-app.firebaseio.com",
+    "storageBucket": "limes-app.appspot.com"
+}
