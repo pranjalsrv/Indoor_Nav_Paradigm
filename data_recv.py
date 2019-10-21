@@ -23,12 +23,11 @@ def stream_handler(message):
         id = message['path']
         allData = message["data"]
         # allData = dict(message["data"].values()[0])
-
         doors = allData['doors']
         rooms = allData['rooms']
         walls = allData['walls']
-        print(rooms)
-        computing(doors, rooms, walls, id)
+        connections = allData['connections']
+        computing(doors, rooms, walls, connections, id)
     except Exception:
         print('At Exception ', traceback.print_exc())
         pass

@@ -22,4 +22,4 @@ def sendLine(lines, id):
         lines_dict[k] = {'x1': i[0][0], 'y1': i[0][1], 'x2': i[1][0], 'y2': i[1][1]}
         k += 1
 
-    db.child("lines").child(id).set(lines_dict)
+    print('Line Sent:', db.child("lines").child(id).set(lines_dict))
