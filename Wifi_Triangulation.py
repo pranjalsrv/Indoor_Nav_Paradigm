@@ -102,7 +102,16 @@ while True:
     for p in player:
         for b in blocklist:
             radius = math.sqrt((p.x-b.x)**2+(p.y-b.y)**2)
-            pygame.draw.circle(screen, (0,0,0), (int(b.x),int(b.y)),int(radius),1)
+            if radius < 200:
+                c = (0,255,0)
+            elif radius >= 201 and radius < 500:
+                c = (0,255,255)
+            elif radius >= 501 and radius < 800:
+                c = (255,165,0)
+            else:
+                c = (255,0,0)
+                    
+            pygame.draw.circle(screen,c,(int(b.x),int(b.y)),int(radius),1)
             
         p.update(move, blocklist)
         screen.blit(p.sprite, p.rect)
