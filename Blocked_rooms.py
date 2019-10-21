@@ -1,7 +1,6 @@
 #Importing modules
 import random
 
-
 #Setting the parameters
 iterations=10000
 n=11
