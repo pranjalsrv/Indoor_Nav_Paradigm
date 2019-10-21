@@ -1,9 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-KP = 5.0  # attractive potential gain
-ETA = 100.0  # repulsive potential gain
-AREA_WIDTH = 30.0  # potential area width [m]
+KP = 5.0  # apg
+ETA = 100.0  # rpg
+AREA_WIDTH = 30.0  # paw
 
 show_animation = True
 
@@ -13,10 +13,10 @@ def calc_potential_field(gx, gy, ox, oy, reso, rr):
     miny = min(oy) - AREA_WIDTH / 2.0
     maxx = max(ox) + AREA_WIDTH / 2.0
     maxy = max(oy) + AREA_WIDTH / 2.0
-    xw = int(round((maxx - minx) / reso))-
+    xw = int(round((maxx - minx) / reso))
     yw = int(round((maxy - miny) / reso))
 
-    # calc each potential
+    
     pmap = [[0.0 for i in range(yw)] for i in range(xw)]
 
     for ix in range(xw):
@@ -37,7 +37,7 @@ def calc_attractive_potential(x, y, gx, gy):
 
 
 def calc_repulsive_potential(x, y, ox, oy, rr):
-    # search nearest obstacle
+    
     minid = -1
     dmin = float("inf")
     for i, _ in enumerate(ox):
@@ -46,7 +46,7 @@ def calc_repulsive_potential(x, y, ox, oy, rr):
             dmin = d
             minid = i
 
-    # calc repulsive potential
+    
     dq = np.hypot(x - ox[minid], y - oy[minid])
 
     if dq <= rr:
@@ -74,10 +74,8 @@ def get_motion_model():
 
 def potential_field_planning(sx, sy, gx, gy, ox, oy, reso, rr):
 
-    # calc potential field
     pmap, minx, miny = calc_potential_field(gx, gy, ox, oy, reso, rr)
 
-    # search path
     d = np.hypot(sx - gx, sy - gy)
     ix = round((sx - minx) / reso)
     iy = round((sy - miny) / reso)
@@ -98,7 +96,7 @@ def potential_field_planning(sx, sy, gx, gy, ox, oy, reso, rr):
             inx = int(ix + motion[i][0])
             iny = int(iy + motion[i][1])
             if inx >= len(pmap) or iny >= len(pmap[0]):
-                p = float("inf")  # outside area
+                p = float("inf")
             else:
                 p = pmap[inx][iny]
             if minp > p:
@@ -124,18 +122,18 @@ def potential_field_planning(sx, sy, gx, gy, ox, oy, reso, rr):
 
 def draw_heatmap(data):
     data = np.array(data).T
-    plt.pcolor(data, vmax=1000.0, cmap=plt.cm.Blues)
+    plt.pcolor(data, vmax=100.0, cmap=plt.cm.Blues)
 
 
 def main():
     print("potential_field_planning start")
 
-    sx = 0.0  # start x position [m]
-    sy = 10.0  # start y positon [m]
-    gx = 30.0  # goal x position [m]
-    gy = 20.0  # goal y position [m]
-    grid_size = 0.5  # potential grid size [m]
-    robot_radius = 5.0  # robot radius [m]
+    sx = 0.0  
+    sy = 10.0  
+    gx = 30.0  
+    gy = 20.0  
+    grid_size = 0.5  
+    robot_radius = 5.0 
 
     ox = [20.0, 20.0, 20.0, 20.0, 15, 14, 13, 12,5,5,5,5,5,5,15,16,17,7,7,7,7]  # obstacle x position list [m]
     oy = [14.0, 15.0, 16.0, 21.0, 30, 30, 30, 30,7,8,9,10,11,12,19,19,19,19,20,21,22]  # obstacle y position list [m]
@@ -144,7 +142,6 @@ def main():
         plt.grid(True)
         plt.axis("equal")
 
-    # path generation
     _, _ = potential_field_planning(
         sx, sy, gx, gy, ox, oy, grid_size, robot_radius)
 
@@ -153,6 +150,4 @@ def main():
 
 
 if __name__ == '__main__':
-    print(__file__ + " start!!")
     main()
-    print(__file__ + " Done!!")
