@@ -1,10 +1,8 @@
-### SETTING NEW BLUEPRINTS
-
-
 import pyrebase
-from compute import computing
 import json
 import traceback
+from pprint import pprint
+from compute import computing
 
 production_config = json.load(open('production_firebase_config.json', 'r'))
 #testing_config = json.load(open('testing_firebase_config.json', 'r'))
@@ -16,7 +14,6 @@ config = {
 }
 
 firebase = pyrebase.initialize_app(config)
-
 db = firebase.database()
 
 
@@ -35,4 +32,4 @@ def stream_handler(message):
         pass
 
 
-my_stream = db.child("blueprints").stream(stream_handler)
+my_stream = db.child("blueprints").stream()
