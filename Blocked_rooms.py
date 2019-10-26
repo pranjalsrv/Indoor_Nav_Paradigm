@@ -1,10 +1,10 @@
 #Importing modules
 import random
-
+import time
 
 def Blocked_room_sequence(n):
     #Setting the parameters
-    iterations=10000
+    iterations=1000
     lr=0.8
 
     #n = int(input('\nEnter number of rooms: '))
@@ -47,7 +47,7 @@ def Blocked_room_sequence(n):
                     R[i][idx]=100
                 else:
                     R[i][idx]=0
-            
+    t1 = time.time()
     #Training begins
     for s in range(0,iterations):
         starter=[]
@@ -70,6 +70,9 @@ def Blocked_room_sequence(n):
     for i in range(0, n):
         for j in range(0, n):
             Q[i][j]=int(Q[i][j])
+
+    print(time.time()-t1)
+
     '''
     print('\nTrained Q matrix for the map is: \n')
     for i in range(0, n):
@@ -108,3 +111,4 @@ def Blocked_room_sequence(n):
 
 n = int(input('\nEnter number of rooms: '))
 print(Blocked_room_sequence(n))
+

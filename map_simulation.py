@@ -1,58 +1,67 @@
-import math
-import pygame
-import random
+import pygame,random
 from pygame.locals import *
 from collections import namedtuple
 
 pygame.init()
 clock=pygame.time.Clock()
-screen=pygame.display.set_mode((1600,900))
+screen=pygame.display.set_mode((640,480))
 
 class Block(object):
     sprite = pygame.image.load("dirt.png").convert_alpha()
-    
     def __init__(self, x, y):
         self.rect = self.sprite.get_rect(centery=y, centerx=x)
-        self.x = x
-        self.y = y
 
 class Player(object):
     sprite = pygame.image.load("dirt1.png").convert()
     sprite.set_colorkey((0,255,0))
     def __init__(self, x, y):
         self.rect = self.sprite.get_rect(centery=y, centerx=x)
-        self.x = x
-        self.y = y
         self.xvel = 0
         self.yvel = 0
         self.move_speed = 8
 
     def update(self, move, blocks):
-        if move.left: 
-            self.xvel = -self.move_speed
-            
-        if move.right: 
-            self.xvel = self.move_speed
-            
-        if move.up: 
-            self.yvel = -self.move_speed
-            
-        if move.down: 
-            self.yvel = self.move_speed
-            
+        # simple left/right movement
+        if move.left: self.xvel = -self.move_speed
+        if move.right: self.xvel = self.move_speed
+
+        # simple up/down movement
+        if move.up: self.yvel = -self.move_speed
+        if move.down: self.yvel = self.move_speed
+
+        # if no left/right movement, x speed is 0, of course
         if not (move.left or move.right):
             self.xvel = 0
         
+        # if no up/down movement, y speed is 0, of course
         if not (move.up or move.down):
             self.yvel = 0
 
+        # move horizontal, and check for horizontal collisions
         self.rect.left += self.xvel
-        
+        self.collide(self.xvel, 0, blocks)
+
+        # move vertically, and check for vertical collisions
         self.rect.top += self.yvel
-        
-        self.x += self.xvel
-        self.y += self.yvel
-        
+        self.collide(0, self.yvel, blocks)
+
+    def collide(self, xvel, yvel, blocks):
+        for block in [blocks[i] for i in self.rect.collidelistall(blocks)]:
+
+            # if xvel is > 0, we know our right side bumped 
+            # into the left side of a block etc.
+            if xvel > 0: self.rect.right = block.rect.left
+            if xvel < 0: self.rect.left = block.rect.right
+
+            # if yvel > 0, we are falling, so if a collision happpens 
+            # we know we hit the ground (remember, we seperated checking for
+            # horizontal and vertical collision, so if yvel != 0, xvel is 0)
+            if yvel > 0:
+                self.rect.bottom = block.rect.top
+                self.yvel = 0
+            # if yvel < 0 and a collision occurs, we bumped our head
+            # on a block above us
+            if yvel < 0: self.rect.top = block.rect.bottom
 
 blocklist = []
 player = []
@@ -72,7 +81,6 @@ while True:
                     x=(int(mse[0]) / 32)*32
                     y=(int(mse[1]) / 32)*32
                     blocklist.append(Block(x+16,y+16))
-                
         else:
             if event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
@@ -92,30 +100,11 @@ while True:
                     player.append(Player(x+16,y+16))
 
     move = Move(key[K_UP], key[K_DOWN], key[K_LEFT], key[K_RIGHT])
-    
-    
-    for b in blocklist:      
+
+    for b in blocklist:
         screen.blit(b.sprite, b.rect)
-    
-
-
     for p in player:
-        for b in blocklist:
-            radius = math.sqrt((p.x-b.x)**2+(p.y-b.y)**2)
-            if radius < 200:
-                c = (0,255,0)
-            elif radius >= 201 and radius < 500:
-                c = (0,255,255)
-            elif radius >= 501 and radius < 800:
-                c = (255,165,0)
-            else:
-                c = (255,0,0)
-                    
-            pygame.draw.circle(screen,c,(int(b.x),int(b.y)),int(radius),1)
-            
         p.update(move, blocklist)
         screen.blit(p.sprite, p.rect)
-    
     clock.tick(60)
     pygame.display.flip()
-
