@@ -1,11 +1,14 @@
 import pyrebase
 import time
+import json
 
+production_config = json.load(open('production_firebase_config.json', 'r'))
+#testing_config = json.load(open('testing_firebase_config.json', 'r'))
 config = {
-  "apiKey": "AIzaSyA2cmMWGz8kHepi3dJv0hEmNL99eAcCXM4",
-  "authDomain": "devjams-813eb.firebaseapp.com",
-  "databaseURL": "https://devjams-813eb.firebaseio.com",
-  "storageBucket": "devjams-813eb.appspot.com"
+    "apiKey": production_config['apiKey'],
+    "authDomain": production_config['authDomain'],
+    "databaseURL": production_config['databaseURL'],
+    "storageBucket": production_config['storageBucket']
 }
 
 firebase = pyrebase.initialize_app(config)
